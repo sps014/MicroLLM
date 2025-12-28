@@ -81,7 +81,7 @@ The final vector from the Transformer stack is projected back into a space as la
    cd MicroLLM
    ```
 
-2. Install dependencies (using `uv` or `pip`):
+2. Install dependencies (create venv):
    ```bash
    uv sync
    ```
