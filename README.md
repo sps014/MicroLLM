@@ -1,10 +1,10 @@
-# MicroLLM 
+# MicroLLM
 
 MicroLLM is a compact, Transformer-based Large Language Model (LLM) implementation. It is designed to be a "miniature" version of state-of-the-art models like GPT-2, making it an excellent resource for learning about LLM architecture, training, and inference.
 
 Despite its "micro" name, it packs a full Transformer decoder stack with modern features like mixed-precision training and weight tying.
 
-## 🌟 Features
+## Features
 
 - **Standard GPT-2 Architecture:** Implements the classic 12-layer, 12-head Transformer architecture.
 - **Causal Self-Attention:** Multi-head attention mechanism with causal masking for generative tasks.
@@ -14,7 +14,7 @@ Despite its "micro" name, it packs a full Transformer decoder stack with modern 
 - **Streaming Data Pipeline:** Dynamically streams the `TinyStories` dataset from Hugging Face, enabling training even on machines with limited disk space.
 - **Inference with Sampling:** Built-in sequential generator with temperature-based multinomial sampling for creative text generation.
 
-## 🏗️ Architecture Diagram
+## Architecture Diagram
 
 The following diagram illustrates the data flow within MicroLLM:
 
@@ -47,7 +47,7 @@ graph TD
     O --> P[Predicted Next Token]
 ```
 
-## 🧠 Architectural Overview
+## Architectural Overview
 
 MicroLLM implements a **Decoder-only Transformer** architecture, which is the foundation for modern generative AI models. Each part of the system plays a critical role in how the model understands and generates language:
 
@@ -66,7 +66,7 @@ This is where the heavy lifting happens. Each block consists of two main compone
 ### 4. The Output Head
 The final vector from the Transformer stack is projected back into a space as large as our vocabulary. These values (Logits) represent the model's "confidence" for what the next token should be. We use **Sampling** (like temperature-based sampling) to inject variety into the generation process.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -83,12 +83,18 @@ The final vector from the Transformer stack is projected back into a space as la
 
 2. Install dependencies (using `uv` or `pip`):
    ```bash
-   pip install torch torchvision tiktoken datasets tqdm aiohttp
+   uv sync
    ```
 
 ### Training
 
-To start training the model on the `TinyStories` dataset, run `main.py` directly or import the `train` function:
+The training and inference logic is located in `main.py`. To start training the model on the `TinyStories` dataset, run the script directly:
+
+```bash
+python main.py
+```
+
+Or import the `train` function in your own script:
 
 ```python
 from main import train
@@ -101,7 +107,7 @@ The training process includes automatic checkpointing every 50 steps.
 
 ### Inference
 
-Generate text based on a prompt:
+To generate text, you can use the `generate` function from `main.py`:
 
 ```python
 from main import generate
@@ -111,7 +117,7 @@ output = generate(trained_model, tokenizer, prompt, max_len=150)
 print(output)
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 The model's dimensions can be customized in `core/micro_llm.py` via the `ModelConfig` dataclass:
 
