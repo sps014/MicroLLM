@@ -28,6 +28,7 @@ def train():
     enc = tiktoken.get_encoding("gpt2")
 
     print(f"Initializing training on {cfg.device}...")
+    print(f"Model supports up to {cfg.block_size} tokens, training on 512-token chunks...")
     model.train()
     
     for step in range(1, 5001): 
@@ -37,10 +38,12 @@ def train():
             try:
                 story = next(dataset_iter)['text']
                 ids = enc.encode(story)
-                if len(ids) > cfg.block_size:
+                # This allows us to train on shorter sequences while still supporting 16K at inference
+                chunk_size = min(512, cfg.block_size)  # Train on 512 tokens, support 16K at inference
+                if len(ids) > chunk_size:
                     # Input (x) is the sequence; Target (y) is the sequence shifted by 1.
-                    xs.append(torch.tensor(ids[:cfg.block_size]))
-                    ys.append(torch.tensor(ids[1:cfg.block_size+1]))
+                    xs.append(torch.tensor(ids[:chunk_size]))
+                    ys.append(torch.tensor(ids[1:chunk_size+1]))
             except (StopIteration, Exception):
                 dataset_iter = iter(dataset) # Restart stream if it ends or hangs
 
@@ -97,4 +100,4 @@ def generate(model, enc, prompt: str, max_len: int = 150):
 if __name__ == "__main__":
     trained_model, tokenizer = train()
     print("\nGeneration complete:")
-    generate(trained_model, tokenizer, "Once there was a little robot who")
+    generate(trained_model, tokenizer, "Once there was a little robot who",max_len=1000)
